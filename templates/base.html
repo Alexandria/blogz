@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <title>{{pageTitle}} </title>
+    </head>
+    <body>
+        <h1>{{pageHeader}}</h1>
+        <h3 style="display:inline-block"><a href="http://localhost:5000\newpost">Add a new blog</a></h3>
+        <h3 style="display:inline-block"><a href="http://localhost:5000\blog">View All Blogs</a></h3>
+        <h3 style="display:inline-block"><a href="http://localhost:5000\logout">Log out</a></h3>
+        <hr/>
+        {% block content%}
+
+        {% endblock %}
+        
+    </body>
+
+</html>
+

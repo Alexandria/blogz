@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if blog| length == 0%}
+        <h1>No blogs yet!</h1>
+    {% else %}
+        {% for post in blog %}
+            <h2><a href="http://localhost:5000\blog?id={{post.id}}"+str(id)>{{post.title}}</a></h2>
+            <p>{{post.content}}</p>
+            <form>
+                    <input type = "hidden" name="task-id" value="{{post.id}}">
+            </form>
+        {% endfor %}
+
+    {% endif %}
+
+
+
+
+{% endblock %}
