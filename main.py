@@ -16,29 +16,33 @@ class Blog(db.Model):
     content = db.Column(db.String(300))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, title, content, user_id):
+    def __init__(self, title, content, user):
         self.title = title
         self.content = content 
-        self.user_id = user_id
+        self.user = user
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(120), unique = True) # This will make it so you cannont have multiple enties with the same email. 
+    username = db.Column(db.String(120), unique = True) # This will make it so you cannont have multiple enties with the same username. 
     password = db.Column(db.String(120))
-    blogs = db.relationship('Blog', backref = 'user_id')
+    blogs = db.relationship('Blog', backref = 'user')
 
 
-    def __init__(self, email, password):
-        self.email = email
+    def __init__(self, username, password):
+        self.username = username
         self.password = password
 
 
-@app.route('/blog', methods=['POST', 'GET'])
+
+@app.route('/blog', methods = ['POST', 'GET'])
 def index():
+    user = User.query.filter_by(username = session['username']).first()
+
     if request.method == 'POST':
         new_subject = request.form.get('subject')
         new_text = request.form['text']
-        list_blog = Blog(new_subject, new_text)
+        
+        list_blog = Blog(new_subject, new_text, user)
         db.session.add(list_blog)
         db.session.commit()
         return render_template('viewBlog.html', pagetitle = "New Blog", pageHeader = new_subject, show_text = new_text )
@@ -49,27 +53,35 @@ def index():
         view = Blog.query.get(id)
         return render_template('viewBlog.html', pageTitle = 'Blog Entry '+id,  pageHeader = view.title, show_text = view.content )
 
-
+    
     blog = Blog.query.all()
-    return render_template('blog.html', pageTitle = 'Blog', blog = blog, pageHeader = 'View all')
+    if request.args.get('user'):
+        user = request.args.get('user')
+        user_blog = User.query.filter_by(username = user).first()
+        user_id = user_blog.id
+        blog = Blog.query.filter_by(user_id = user_id).all()
+        return render_template('blog.html', pagetitle = 'My Blog', blog = blog)
 
+    
+    
+    return render_template('blog.html', pagetitle = 'My Blog', blog = blog)
   
     
-
 @app.route('/newpost')
 def addBlog():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('addBlog.html', pageTitle = "Create Blog", pageHeader = 'Create a new blog')
-
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        username = request.form.get('username')
         password = request.form.get('password')
-        user = User.query.filter_by(email = email).first()
+        user = User.query.filter_by(username = username).first()
         
         if user and user.password == password:
-            session['email'] = email
+            session['username'] = username
             return redirect('/blog')
         else:
             return '<h1>not the correct login</h1>'
@@ -81,15 +93,15 @@ def login():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        email = request.form.get('email')
+        username = request.form.get('username')
         password = request.form.get('password')
-        new_usr = User(email, password)
+        new_usr = User(username, password)
         
-        user = User.query.filter_by(email = email).first()
+        user = User.query.filter_by(username = username).first()
         if not user:
             db.session.add(new_usr)
             db.session.commit()
-            session['email']=email
+            session['username']=username
             return redirect('/blog')
         
 
@@ -99,11 +111,12 @@ def register():
 @app.route('/logout')
 def logout():
     
-    if 'email' not in  session:
+    if 'username' not in  session:
         return '<h1>You are already logged out</h1>'
 
-    del session['email']
-    return redirect('/blog')    
+    del session['username']
+    return redirect('/blog')   
+
 
 if __name__ == '__main__':
     app.run()

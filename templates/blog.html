@@ -10,7 +10,9 @@
             <p>{{post.content}}</p>
             <form>
                     <input type = "hidden" name="task-id" value="{{post.id}}">
+                    <input type = "hidden" name="user-id" value="{{post.user_id}}">
             </form>
+            <h4><i>created by <a href = 'http://localhost:5000\blog?user={{post.user.username}}'>{{ post.user.username }}</a></i></h4>
         {% endfor %}
 
     {% endif %}
