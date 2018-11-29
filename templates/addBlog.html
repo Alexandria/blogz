@@ -2,15 +2,53 @@
 
 {% block content %}
 
-<form method = 'POST' action="/blog">
-    <label> <h1>Blog Title </h1>
-        <input type = 'text' name = 'subject' value = "" required>
-    </label>
-    <label> <h3> Whats on your mind? </h3>
-        <textarea rows="3" cols="50" name="text" required></textarea>
-    </label>
-    <input type = 'submit' name = 'submit' value ='Add'>
 
-</form>
+    <div class = "container pull-left">
+        <form method = 'POST' action="/blog">
+            <div class = "row form-group ">
+                <label class ="control-label col-md-2" for = "subject"> <h1>Blog Title </h1></label>
+                    <input class= "form-control col-md-10" type = 'text' name = "subject" value = "" required>
+            </div>
+            <div class = "row form-group">
+                <label class = "control-label col-md-2" for ="text"> <h2> Whats on your mind? </h2></label>
+                <textarea class = "form-control col-md-10" rows = "10" class = "form-control" name="text" required></textarea>
+            </div>
+            
+            <div class = "row form-group">
+                    <!-- I will trigger a model event useing data-togle and data-event -->
+                    
+                    <button type="button" class="col-md-offset-2 btn-info btn-lg" data-toggle="modal" data-target="#myModal">Submit Blog</button> 
+                   
+        
+            </div>
+                   
+        
+            <!-- My Model -->
+            <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                    
+                      <!-- Modal content -->
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Submited!</h4>
+                        </div>
+                        <div class="modal-body">
+                          <p>Your blog has been submited. You may view it under "All Blogs" or under your personal page</p>
+                        </div>
+                        <div class="modal-footer">
+                           <input class="col-md-offset-2 btn-info btn-lg"  type = 'submit' name = 'submit' value ='Close' >
+                        </div>
+                      </div>
+                      
+                    </div>
+            </div>
+        
+        
+        
+        </form>
+    </div>
+
+
+
 
 {% endblock %}

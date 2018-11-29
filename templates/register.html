@@ -1,29 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="/register" method="post">
-    <table>
-        <tr>
-            <td><label for="username">User Name</label></td>
-            <td>
-                <input name="username" type="text" value="{{ username }}" required>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="password">Password</label></td>
-            <td>
-                <input name="password" type="password" required>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="verify">Verify Password</label></td>
-            <td>
-                <input name="verify" type="password" required>
-            </td>
-        </tr>
-    </table>
-    <input type="submit" value="Register">
-</form>
 
+<div class = "container pull-left">
+    <form action="/register" method="post">
+
+        
+        <div class = "input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input class = "form-control" name="username" type="text" value="{{ username }}" placeholder=" Username" required>
+        </div>
+        <div class = "input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input class = "form-control" name="password" type="password" placeholder="Password" required>
+        </div>
+        <div class = "input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input class = "form-control" name="verify" type="password" placeholder="Retype Password" required>
+        </div>
+        <input type="submit" value="Register">
+    </form>
+</div>
 {% endblock %}
 
