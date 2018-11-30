@@ -57,13 +57,14 @@ def index():
         list_blog = Blog(new_subject, new_text, user)
         db.session.add(list_blog)
         db.session.commit()
+                    
         return render_template('viewBlog.html', pagetitle = "New Blog", pageHeader = new_subject, show_text = new_text, username = session['username'] )
     
     # If the user selects a certain blog
     if request.args.get('id'):
         id = request.args.get('id')
         view = Blog.query.get(id)
-        return render_template('viewBlog.html', pageTitle = 'Blog Entry '+id,  pageHeader = view.title, show_text = view.content )
+        return render_template('viewBlog.html', pageTitle = 'Blog Entry '+id,  pageHeader = view.title, show_text = view.content, username = session['username'] )
 
 
     blog = Blog.query.all()
@@ -112,7 +113,7 @@ def register():
             db.session.add(new_usr)
             db.session.commit()
             session['username']=username
-            return redirect('/blog')
+            return redirect('/')
         else:
             #Todo State that user is already registered
             flash("There is already a user with that name")
