@@ -54,6 +54,7 @@ def index():
         new_text = request.form['text']
         user = User.query.filter_by(username = session['username']).first()
 
+        
         list_blog = Blog(new_subject, new_text, user)
         db.session.add(list_blog)
         db.session.commit()
@@ -64,7 +65,7 @@ def index():
     if request.args.get('id'):
         id = request.args.get('id')
         view = Blog.query.get(id)
-        return render_template('viewBlog.html', pageTitle = 'Blog Entry '+id,  pageHeader = view.title, show_text = view.content, username = session['username'] )
+        return render_template('viewBlog.html', pageTitle = 'Blog Entry '+id,  pageHeader = view.title, show_text = view.content, username = view.user.username )
 
 
     blog = Blog.query.all()
