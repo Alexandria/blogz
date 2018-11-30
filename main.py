@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -32,6 +32,17 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+@app.before_request
+def require_login():
+    allowed_routes = ['login', 'register', 'index', 'home', 'logout']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
+
+@app.route('/')
+def home():
+    users = User.query.all()
+    return render_template('home.html', pagetitle = 'Home Page', users = users, pageHeader = "User Directory")
+
 
 
 @app.route('/blog', methods = ['POST', 'GET'])
@@ -41,11 +52,12 @@ def index():
     if request.method == 'POST':
         new_subject = request.form.get('subject')
         new_text = request.form['text']
-        user = User.query.filter_by(username = session['username']).first()        
+        user = User.query.filter_by(username = session['username']).first()
+
         list_blog = Blog(new_subject, new_text, user)
         db.session.add(list_blog)
         db.session.commit()
-        return render_template('viewBlog.html', pagetitle = "New Blog", pageHeader = new_subject, show_text = new_text )
+        return render_template('viewBlog.html', pagetitle = "New Blog", pageHeader = new_subject, show_text = new_text, username = session['username'] )
     
     # If the user selects a certain blog
     if request.args.get('id'):
@@ -53,7 +65,7 @@ def index():
         view = Blog.query.get(id)
         return render_template('viewBlog.html', pageTitle = 'Blog Entry '+id,  pageHeader = view.title, show_text = view.content )
 
-    
+
     blog = Blog.query.all()
     if request.args.get('user'):
         user = request.args.get('user')
@@ -62,16 +74,14 @@ def index():
         blog = Blog.query.filter_by(user_id = user_id).all()
         return render_template('blog.html', pagetitle = 'My Blog', blog = blog)
 
-    
-    
-    return render_template('blog.html', pagetitle = 'My Blog', blog = blog)
   
     
+    return render_template('blog.html', pagetitle = 'My Blog', blog = blog, pageHeader = "All Blogs")
+
 @app.route('/newpost')
 def addBlog():
-    if 'username' not in session:
-        return redirect('/login')
     return render_template('addBlog.html', pageTitle = "Create Blog", pageHeader = 'Create a new blog')
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -103,7 +113,11 @@ def register():
             db.session.commit()
             session['username']=username
             return redirect('/blog')
-        
+        else:
+            #Todo State that user is already registered
+            flash("There is already a user with that name")
+            return redirect('/register')
+            
 
     return render_template('register.html', pageHeader = "Register")
 
@@ -112,13 +126,12 @@ def register():
 def logout():
     
     if 'username' not in  session:
-        return '<h1>You are already logged out</h1>'
+        flash("You are already logged out!")
+        return redirect('/')
 
     del session['username']
-    return redirect('/blog')   
+    return redirect('/blog')    
 
 
 if __name__ == '__main__':
     app.run()
-
-
