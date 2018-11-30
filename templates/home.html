@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if users| length == 0%}
+        <h1>No Users yet!</h1>
+    {% else %}
+        {% for user in users %}
+        <h2><a href = 'http://localhost:5000\blog?user={{user.username}}'>{{ user.username }}</a></h2>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
