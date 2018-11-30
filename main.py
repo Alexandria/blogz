@@ -36,12 +36,12 @@ class User(db.Model):
 
 @app.route('/blog', methods = ['POST', 'GET'])
 def index():
-    user = User.query.filter_by(username = session['username']).first()
+    
 
     if request.method == 'POST':
         new_subject = request.form.get('subject')
         new_text = request.form['text']
-        
+        user = User.query.filter_by(username = session['username']).first()        
         list_blog = Blog(new_subject, new_text, user)
         db.session.add(list_blog)
         db.session.commit()
