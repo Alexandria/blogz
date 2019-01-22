@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 
+#I plan to modify this blog to focus more on useres documenting thier healthy hair Journey
+# A lot of the core elements will stay the same but I will need to modify the Blog object model.
 
 app  = Flask(__name__)
 app.config['DEBUG'] = True
@@ -9,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:root@localhost:88
 app.secret_key = '1234567oooooo'
 db = SQLAlchemy(app)
 
-
+# I will need to modify this model to incorperate Pictures, Length Check, Products Used.
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key = True) 
     title = db.Column(db.String(50))

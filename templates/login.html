@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>If you don't have an account, you may <a href="/register">register</a> for one</p>
+<div class ="container pull-left">
+    <h3>If you don't have an account, you may <a href="/register">register</a> for one</h3>
 <form action="/login" method="post">
-    <table>
-        <tr>
-            <td><label for="username">User Name</label></td>
-            <td>
-                <input name="username" type="text" value="{{ username }}" required>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="password">Password</label></td>
-            <td>
-                <input name="password" type="password" required>
-            </td>
-        </tr>
-    </table>
+    <div class = "input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input class = "form-control" name="username" type="text" placeholder = "Username" value="{{ username }}" required>
+    </div>
+    <div class = "input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+        <input class = "form-control" name="password" type="password" placeholder="Password" required>
+    </div>       
     <input type="submit" value="Login">
 </form>
+</div>>
 {% endblock %}
